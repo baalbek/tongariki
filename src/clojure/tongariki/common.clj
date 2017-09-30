@@ -98,6 +98,9 @@
         mi (Math/abs (float (reduce min 0 coll)))
         m (max ma mi)]
     (map #(/ % m) coll)))
+ 
+(defn normalize-dates [anchor-date date-items]
+    (map #(diff-days anchor-date %) date-items))
 
 ;------------------------- loops --------------------------------
 (defmacro process-lists-with [f & lists]
