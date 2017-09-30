@@ -1,4 +1,4 @@
-(ns tongariki.db 
+(ns tongariki.db
   (:import
     [org.apache.ibatis.io Resources]
     [org.apache.ibatis.session
@@ -17,7 +17,7 @@
           factory)))))
 
 (defmacro with-session [conf-xml mapper & body]
-  `(let [session# ^SqlSession (.openSession (get-factory ~conf-xml))
+  `(let [session# ^SqlSession (.openSession ^SqlSessionFactory (get-factory ~conf-xml))
          ~'it (.getMapper session# ~mapper)
          result# ~@body]
      (doto session# .commit .close)
