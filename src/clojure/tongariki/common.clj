@@ -94,7 +94,9 @@
 
 ;------------------------- numeric --------------------------------
 (defn normalize [coll]
-  (let [m (float (reduce max 0 coll))]
+  (let [ma (float (reduce max 0 coll))
+        mi (Math/abs (float (reduce min 0 coll)))
+        m (max ma mi)]
     (map #(/ % m) coll)))
 
 ;------------------------- loops --------------------------------
