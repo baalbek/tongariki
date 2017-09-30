@@ -91,6 +91,12 @@
       (= variants :set)
       (setter s-prop set-fn))))
 
+
+;------------------------- numeric --------------------------------
+(defn normalize [coll]
+  (let [m (float (reduce max 0 coll))]
+    (map #(/ % m) coll)))
+
 ;------------------------- loops --------------------------------
 (defmacro process-lists-with [f & lists]
   (let [num-lists (count lists)]
