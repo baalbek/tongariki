@@ -6,7 +6,7 @@
 
 (defn diff-days [d1 d2]
   (.between ChronoUnit/DAYS d1 d2))
-  
+
 (defmacro map-java-fn [map-fn java-obj lst]
   `(map #(~map-fn ~java-obj %) ~lst))
 
@@ -94,29 +94,29 @@
 ;------------------------- loops --------------------------------
 (defmacro process-lists-with [f & lists]
   (let [num-lists (count lists)]
-    (cond 
-      (= 2 num-lists) 
+    (cond
+      (= 2 num-lists)
         (let [[a b] lists]
           `(loop [a# ~a b# ~b]
             (if (not (nil? a#))
               (do
                 (~f (first a#) (first b#))
                 (recur (next a#) (next b#))))))
-      (= 3 num-lists) 
+      (= 3 num-lists)
         (let [[a b c] lists]
           `(loop [a# ~a b# ~b c# ~c]
             (if (not (nil? a#))
               (do
                 (~f (first a#) (first b#) (first c#))
                 (recur (next a#) (next b#) (next c#))))))
-      (= 4 num-lists) 
+      (= 4 num-lists)
         (let [[a b c d] lists]
           `(loop [a# ~a b# ~b c# ~c d# ~d]
             (if (not (nil? a#))
               (do
                 (~f (first a#) (first b#) (first c#) (first d#))
                 (recur (next a#) (next b#) (next c#) (next d#))))))
-      (= 5 num-lists) 
+      (= 5 num-lists)
         (let [[a b c d e] lists]
           `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e]
             (if (not (nil? a#))
