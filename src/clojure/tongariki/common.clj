@@ -122,4 +122,25 @@
             (if (not (nil? a#))
               (do
                 (~f (first a#) (first b#) (first c#) (first d#) (first e#))
-                (recur (next a#) (next b#) (next c#) (next d#) (next e#)))))))))
+                (recur (next a#) (next b#) (next c#) (next d#) (next e#))))))
+      (= 6 num-lists)
+        (let [[a b c d e g] lists]
+          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g]
+            (if (not (nil? a#))
+              (do
+                (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#))
+                (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#))))))
+      (= 7 num-lists)
+        (let [[a b c d e g h] lists]
+          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g h# ~h]
+            (if (not (nil? a#))
+              (do
+                (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#) (first h#))
+                (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#) (next h#))))))
+      (= 8 num-lists)
+        (let [[a b c d e g h j] lists]
+          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g h# ~h j# ~j]
+            (if (not (nil? a#))
+              (do
+                (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#) (first h#) (first j#))
+                (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#) (next h#) (next j#)))))))))
