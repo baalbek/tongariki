@@ -20,6 +20,22 @@
 (defmacro in? [v items]
   `(some #(= ~v %) ~items))
 
+
+;--------------------------- nif let ---------------------------------
+(defmacro nif-let
+  "Nested if-let. If all bindings are non-nil, execute body in the context of
+  those bindings.  If a binding is nil, evaluate its `else-expr` form and stop
+  there.  `else-expr` is otherwise not evaluated.
+
+  bindings* => binding-form else-expr"
+  [bindings & body]
+  (cond
+    (= (count bindings) 0) `(do ~@body)
+    (symbol? (bindings 0)) `(if-let ~(subvec bindings 0 2)
+                              (nif-let ~(subvec bindings 3) ~@body)
+                              ~(bindings 2))
+    :else (throw (IllegalArgumentException. "symbols only in bindings"))))
+
 ;------------------------- defprops --------------------------------
 (defn as-get-set [^String p get-or-set prefix]
   (str prefix get-or-set (cs/upper-case (first p)) (.substring p 1)))
@@ -92,13 +108,14 @@
       (setter s-prop set-fn))))
 
 
+
 ;------------------------- numeric --------------------------------
 (defn normalize [coll]
   (let [ma (float (reduce max 0 coll))
         mi (Math/abs (float (reduce min 0 coll)))
         m (max ma mi)]
     (map #(/ % m) coll)))
- 
+
 (defn normalize-dates [anchor-date date-items]
     (map #(diff-days anchor-date %) date-items))
 
@@ -107,51 +124,51 @@
   (let [num-lists (count lists)]
     (cond
       (= 2 num-lists)
-        (let [[a b] lists]
-          `(loop [a# ~a b# ~b]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#))
-                (recur (next a#) (next b#))))))
+      (let [[a b] lists]
+        `(loop [a# ~a b# ~b]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#))
+              (recur (next a#) (next b#))))))
       (= 3 num-lists)
-        (let [[a b c] lists]
-          `(loop [a# ~a b# ~b c# ~c]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#) (first c#))
-                (recur (next a#) (next b#) (next c#))))))
+      (let [[a b c] lists]
+        `(loop [a# ~a b# ~b c# ~c]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#) (first c#))
+              (recur (next a#) (next b#) (next c#))))))
       (= 4 num-lists)
-        (let [[a b c d] lists]
-          `(loop [a# ~a b# ~b c# ~c d# ~d]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#) (first c#) (first d#))
-                (recur (next a#) (next b#) (next c#) (next d#))))))
+      (let [[a b c d] lists]
+        `(loop [a# ~a b# ~b c# ~c d# ~d]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#) (first c#) (first d#))
+              (recur (next a#) (next b#) (next c#) (next d#))))))
       (= 5 num-lists)
-        (let [[a b c d e] lists]
-          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#) (first c#) (first d#) (first e#))
-                (recur (next a#) (next b#) (next c#) (next d#) (next e#))))))
+      (let [[a b c d e] lists]
+        `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#) (first c#) (first d#) (first e#))
+              (recur (next a#) (next b#) (next c#) (next d#) (next e#))))))
       (= 6 num-lists)
-        (let [[a b c d e g] lists]
-          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#))
-                (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#))))))
+      (let [[a b c d e g] lists]
+        `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#))
+              (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#))))))
       (= 7 num-lists)
-        (let [[a b c d e g h] lists]
-          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g h# ~h]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#) (first h#))
-                (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#) (next h#))))))
+      (let [[a b c d e g h] lists]
+        `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g h# ~h]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#) (first h#))
+              (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#) (next h#))))))
       (= 8 num-lists)
-        (let [[a b c d e g h j] lists]
-          `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g h# ~h j# ~j]
-            (if (not (nil? a#))
-              (do
-                (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#) (first h#) (first j#))
-                (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#) (next h#) (next j#)))))))))
+      (let [[a b c d e g h j] lists]
+        `(loop [a# ~a b# ~b c# ~c d# ~d e# ~e g# ~g h# ~h j# ~j]
+          (if (not (nil? a#))
+            (do
+              (~f (first a#) (first b#) (first c#) (first d#) (first e#) (first g#) (first h#) (first j#))
+              (recur (next a#) (next b#) (next c#) (next d#) (next e#) (next g#) (next h#) (next j#)))))))))
