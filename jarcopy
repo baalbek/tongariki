@@ -1,0 +1,7 @@
+#!/bin/bash
+
+lein jar
+
+cp target/tongariki-1.0.jar ../rapanui/dist/
+
+exit 0
